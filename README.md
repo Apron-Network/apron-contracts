@@ -1,10 +1,9 @@
-# Apron-contracts
-contracts for Apron, using [ink!](https://github.com/paritytech/ink).
+# Ink! Contracts for Apron Network
 
-## install cargo-contract
-reference [here]().
+## Install dependencies
+reference [https://paritytech.github.io/ink-docs/getting-started/setup](https://paritytech.github.io/ink-docs/getting-started/setup).
 
-## compile contracts
+## Compile 
 ```bash
 cargo +nightly contract build
 ```
