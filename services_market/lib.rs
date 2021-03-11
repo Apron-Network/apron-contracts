@@ -29,7 +29,7 @@ mod services_market {
     )]
     pub struct Service {
         // service id
-        pub id: u64,
+        pub index: u64,
         // service uuid
         pub uuid: String,
         // service's provider name
@@ -69,7 +69,7 @@ mod services_market {
         pub fn new(controller: AccountId) -> Self {
             Self {
                 owner: controller,
-                services_index: 100000,
+                services_index: 0,
                 services_map: Default::default(),
                 services_map_by_uuid: Default::default(),
             }
@@ -83,7 +83,7 @@ mod services_market {
             assert_eq!(controller == self.owner, true);
             assert_eq!(self.services_index + 1 > self.services_index, true);
             self.services_map.insert(self.services_index, Service {
-                id: self.services_index,
+                index: self.services_index,
                 uuid: uuid.clone(),
                 name,
                 create_time,
@@ -106,10 +106,10 @@ mod services_market {
             true
         }
 
-        /// query service by id
+        /// query service by index
         #[ink(message)]
-        pub fn query_service_by_id(&self, id: u64) -> Service {
-            self.services_map.get(&id).unwrap().clone()
+        pub fn query_service_by_index(&self, index: u64) -> Service {
+            self.services_map.get(&index).unwrap().clone()
         }
 
         /// query service by uuid
@@ -160,7 +160,7 @@ mod services_market {
             let length = services.len() as u32;
             assert!(length == 1);
             for s in services{
-                let debug_msg = format!("service is {}, {}, {}", &s.uuid, &s.name, &s.provider_name);
+                let debug_msg = format!("service is {}, {}, {}, {}", &s.index, &s.uuid, &s.name, &s.provider_name);
                 ink_env::debug_println(&debug_msg)
             }
         }
