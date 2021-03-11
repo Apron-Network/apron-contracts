@@ -133,7 +133,7 @@ mod services_market {
         }
     }
 
-     #[cfg(test)]
+    #[cfg(test)]
     mod tests {
         use super::*;
         use ink_lang as ink;
@@ -160,11 +160,9 @@ mod services_market {
             let length = services.len() as u32;
             assert!(length == 1);
             for s in services{
-                ink_env::debug_println(&s.uuid);
+                let debug_msg = format!("service is {}, {}, {}", &s.uuid, &s.name, &s.provider_name);
+                ink_env::debug_println(&debug_msg)
             }
-
-            // let dbg_msg = format!("list is {}", services);
-            // ink_env::debug_println( &dbg_msg );
         }
     }
 }
