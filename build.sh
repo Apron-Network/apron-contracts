@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-VERSION=0.1
 WORK_DIR=$(cd $(dirname $0); pwd)
 SERVICE_MARKET=services_market
 SERVICE_STATISTICS=services_statistics
@@ -16,9 +15,9 @@ function build_module() {
       exit 1
     fi
     echo "copy to ../target"
-    cp ${m_dir}/target/${m_name}.wasm ../target/${m_name}_v$VERSION.wasm
-    cp ${m_dir}/target/${m_name}.contract ../target/${m_name}_v$VERSION.contract
-    cp ${m_dir}/target/metadata.json ../target/${m_name}_v$VERSION.json
+    cp ${m_dir}/target/${m_name}.wasm ../target/${m_name}.wasm
+    cp ${m_dir}/target/${m_name}.contract ../target/${m_name}.contract
+    cp ${m_dir}/target/metadata.json ../target/${m_name}.json
     cd -
 }
 
