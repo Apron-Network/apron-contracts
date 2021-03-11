@@ -22,7 +22,7 @@ mod services_statistics {
     use services_market::Service;
 
     // service information
-    #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout,)]
+    #[derive(Debug, scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout,)]
     #[cfg_attr(
     feature = "std",
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
@@ -67,7 +67,7 @@ mod services_statistics {
             Self {
                 owner: controller,
                 services: contract_instance,
-                statistics_index: 100000,
+                statistics_index: 0,
                 statistics_map: Default::default(),
                 services_map_by_uuid: Default::default(),
                 services_map_by_user_key: Default::default(),
@@ -80,11 +80,10 @@ mod services_statistics {
                             start_time: u64, end_time: u64, usage: u64, price_plan: String, cost: u64) -> bool {
             let caller = self.env().caller();
             let service = self.services.query_service_by_uuid(service_uuid.clone());
+
             assert_eq!(service.provider_owner == caller, true);
             assert_eq!(self.statistics_index + 1 > self.statistics_index, true);
 
-            self.statistics_index = self.statistics_index + 1;
-            
             self.statistics_map.insert(self.statistics_index, UsageRecord {
                 id: self.statistics_index,
                 service_uuid: service_uuid.clone(),
@@ -95,10 +94,12 @@ mod services_statistics {
                 usage,
                 cost,
             });
+
             let uuid_ids = self.services_map_by_uuid.entry(service_uuid.clone()).or_insert(Vec::new());
             uuid_ids.push(self.statistics_index);
             let user_key_ids = self.services_map_by_user_key.entry(user_key.clone()).or_insert(Vec::new());
             user_key_ids.push(self.statistics_index);
+
             self.env().emit_event(SubmitUsageRecordEvent {
                 id: self.statistics_index,
                 service_uuid,
@@ -110,15 +111,15 @@ mod services_statistics {
             true
         }
 
-        /// query service by id
+        /// query service usage statistics by index
         #[ink(message)]
-        pub fn query_service_by_id(&self, id: u64) -> UsageRecord {
+        pub fn query_by_index(&self, id: u64) -> UsageRecord {
             self.statistics_map.get(&id).unwrap().clone()
         }
 
-        /// query service by uuid
+        /// query service usage statistics by service uuid
         #[ink(message)]
-        pub fn query_service_by_uuid(&self, uuid: String) -> Vec<UsageRecord> {
+        pub fn query_by_service_uuid(&self, uuid: String) -> Vec<UsageRecord> {
             let uuid_ids = self.services_map_by_uuid.get(&uuid).unwrap();
             let mut service_vec = Vec::new();
             let mut uuid_ids_iter = uuid_ids.into_iter();
@@ -130,9 +131,9 @@ mod services_statistics {
             service_vec
         }
 
-        /// query service by user key
+        /// query service usage statistics by user key
         #[ink(message)]
-        pub fn query_service_by_user_key(&self, user_key: String) -> Vec<UsageRecord> {
+        pub fn query_by_user_key(&self, user_key: String) -> Vec<UsageRecord> {
             let user_key_ids = self.services_map_by_user_key.get(&user_key).unwrap();
             let mut service_vec = Vec::new();
             let mut iter = user_key_ids.into_iter();
@@ -142,6 +143,17 @@ mod services_statistics {
                 item = iter.next();
             }
             service_vec
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        use ink_lang as ink;
+
+        #[ink::test]
+        fn default_works() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
         }
     }
 }
