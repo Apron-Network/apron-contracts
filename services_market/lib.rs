@@ -22,7 +22,7 @@ mod services_market {
     };
 
     // service information
-    #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout,)]
+    #[derive(Debug, scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout,)]
     #[cfg_attr(
     feature = "std",
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
@@ -130,6 +130,41 @@ mod services_market {
                 item = iter.next();
             }
             service_vec
+        }
+    }
+
+     #[cfg(test)]
+    mod tests {
+        use super::*;
+        use ink_lang as ink;
+
+        #[ink::test]
+        fn default_works() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut market = ServicesMarket::new(accounts.alice);
+
+            let uuid = "asdfsdfsdfsdfsdfsdfsdfasdf".to_string();
+            let name = "first service".to_string();
+            let desc = "desc of service".to_string();
+            let logo = "logo logo".to_string();
+            let create_time = 1615442616;
+            let provider_name = "provider".to_string();
+            let provider_addr = accounts.alice;
+            let usage = "usage of first service".to_string();
+            let price_plan = "the price plan of first service".to_string();
+            let declaimer = "the declaimer".to_string();
+
+            market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, price_plan, declaimer);
+
+            let services = market.list_services();
+            let length = services.len() as u32;
+            assert!(length == 1);
+            for s in services{
+                ink_env::debug_println(&s.uuid);
+            }
+
+            // let dbg_msg = format!("list is {}", services);
+            // ink_env::debug_println( &dbg_msg );
         }
     }
 }
