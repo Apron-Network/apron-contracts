@@ -82,6 +82,9 @@ mod services_statistics {
             let service = self.services.query_service_by_uuid(service_uuid.clone());
             assert_eq!(service.provider_owner == caller, true);
             assert_eq!(self.statistics_index + 1 > self.statistics_index, true);
+
+            self.statistics_index = self.statistics_index + 1;
+            
             self.statistics_map.insert(self.statistics_index, UsageRecord {
                 id: self.statistics_index,
                 service_uuid: service_uuid.clone(),
