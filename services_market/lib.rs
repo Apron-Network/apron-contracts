@@ -138,10 +138,9 @@ mod services_market {
 
         /// query services
         #[ink(message)]
-        pub fn list_services_provider(&self) -> Vec<Service> {
-            let caller = self.env().caller();
+        pub fn list_services_provider(&self, provider: AccountId) -> Vec<Service> {
             let mut service_vec = Vec::new();
-            let mut iter = self.services_map_by_provider.get(&caller).unwrap().into_iter();
+            let mut iter = self.services_map_by_provider.get(&provider).unwrap().into_iter();
             let mut item = iter.next();
             while item.is_some() {
                 service_vec.push(self.services_map.get(item.unwrap()).unwrap().clone());

@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x00959f602f897b81633e4cd2934b5ef5014e5ac9f0387c10c459be83686619a4",
+    "hash": "0xe741122e48aa27ac3513d7efab490522150e35f8f93902af161180e081689c3c",
     "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -273,7 +273,17 @@
         "selector": "0xa9f18e7a"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "provider",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
         "docs": [
           " query services"
         ],

@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xba78aeee9e2f52a385e61dcfe5cd57be34f8fbaab462f4706b65fe6a3672eeb3",
+    "hash": "0x16ab9cc50d0640b1ead9245e0b44855e8b46815e6300dd105f3ea8f984a75115",
     "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -187,7 +187,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 15
+          "type": 16
         },
         "selector": "0x6973ebbc"
       },
@@ -243,7 +243,7 @@
           "displayName": [
             "Vec"
           ],
-          "type": 16
+          "type": 17
         },
         "selector": "0x1c5ca494"
       },
@@ -271,9 +271,37 @@
           "displayName": [
             "Vec"
           ],
-          "type": 16
+          "type": 17
         },
         "selector": "0x5db0b93f"
+      },
+      {
+        "args": [
+          {
+            "name": "provider",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [
+          " query service usage statistics by provider"
+        ],
+        "mutates": false,
+        "name": [
+          "query_by_provider"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Vec"
+          ],
+          "type": 17
+        },
+        "selector": "0x83b10bd0"
       }
     ]
   },
@@ -555,6 +583,86 @@
             }
           },
           "name": "services_map_by_user_key"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0900000003000000000000000000000000000000000000000000000000000000",
+                              "ty": 5
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0a00000003000000000000000000000000000000000000000000000000000000",
+                                      "ty": 6
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0a00000004000000000000000000000000000000000000000000000000000000",
+                                          "ty": 15
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0b00000003000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0b00000004000000000000000000000000000000000000000000000000000000",
+                          "ty": 13
+                        }
+                      },
+                      "offset": "0x0a00000004000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "services_map_by_provider"
         }
       ]
     }
@@ -819,6 +927,39 @@
           "type": 4
         }
       }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 8
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 1
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        1
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
     },
     {
       "def": {

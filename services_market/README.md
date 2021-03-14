@@ -68,5 +68,5 @@ definition: pub fn list_services_provider(&self) -> Vec<Service>;
 list services.
 ```bash
 type: query
-definition: pub fn list_services(&self) -> Vec<Service>;
+definition: pub fn list_services_provider(&self, provider: AccountId) -> Vec<Service>;
 ```

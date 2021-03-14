@@ -55,3 +55,11 @@ query service by user key.
 type: query
 definition: pub fn query_service_by_user_key(&self, user_key: String) -> Vec<UsageRecord>;
 ```
+
+
+### query service by provider
+query service by the provider.
+```bash
+type: query
+definition: pub fn query_by_provider(&self, provider: AccountId) -> Vec<UsageRecord>;
+```

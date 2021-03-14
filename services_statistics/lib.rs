@@ -48,6 +48,7 @@ mod services_statistics {
         statistics_map: StorageHashMap<u64, UsageRecord>,
         services_map_by_uuid: StorageHashMap<String, Vec<u64>>,
         services_map_by_user_key: StorageHashMap<String, Vec<u64>>,
+        services_map_by_provider: StorageHashMap<AccountId, Vec<u64>>,
     }
 
     #[ink(event)]
@@ -71,6 +72,7 @@ mod services_statistics {
                 statistics_map: Default::default(),
                 services_map_by_uuid: Default::default(),
                 services_map_by_user_key: Default::default(),
+                services_map_by_provider: Default::default(),
             }
         }
 
@@ -99,6 +101,8 @@ mod services_statistics {
             uuid_ids.push(self.statistics_index);
             let user_key_ids = self.services_map_by_user_key.entry(user_key.clone()).or_insert(Vec::new());
             user_key_ids.push(self.statistics_index);
+            let provider_ids = self.services_map_by_provider.entry(service.provider_owner.clone()).or_insert(Vec::new());
+            provider_ids.push(self.statistics_index);
 
             self.env().emit_event(SubmitUsageRecordEvent {
                 id: self.statistics_index,
@@ -137,6 +141,20 @@ mod services_statistics {
             let user_key_ids = self.services_map_by_user_key.get(&user_key).unwrap();
             let mut service_vec = Vec::new();
             let mut iter = user_key_ids.into_iter();
+            let mut item = iter.next();
+            while item.is_some() {
+                service_vec.push(self.statistics_map.get(item.unwrap()).unwrap().clone());
+                item = iter.next();
+            }
+            service_vec
+        }
+
+        /// query service usage statistics by provider
+        #[ink(message)]
+        pub fn query_by_provider(&self, provider: AccountId) -> Vec<UsageRecord> {
+            let provider_ids = self.services_map_by_provider.get(&provider).unwrap();
+            let mut service_vec = Vec::new();
+            let mut iter = provider_ids.into_iter();
             let mut item = iter.next();
             while item.is_some() {
                 service_vec.push(self.statistics_map.get(item.unwrap()).unwrap().clone());
