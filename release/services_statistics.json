@@ -1,0 +1,836 @@
+{
+  "metadataVersion": "0.1.0",
+  "source": {
+    "hash": "0xba78aeee9e2f52a385e61dcfe5cd57be34f8fbaab462f4706b65fe6a3672eeb3",
+    "language": "ink! 3.0.0-rc1",
+    "compiler": "rustc 1.50.0-nightly"
+  },
+  "contract": {
+    "name": "services_statistics",
+    "version": "0.1.0",
+    "authors": [
+      "[your_name] <[your_email]>"
+    ]
+  },
+  "spec": {
+    "constructors": [
+      {
+        "args": [
+          {
+            "name": "controller",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "services_addr",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [
+          " Constructor that initializes the `bool` value to the given `init_value`."
+        ],
+        "name": [
+          "new"
+        ],
+        "selector": "0xd183512b"
+      }
+    ],
+    "docs": [],
+    "events": [
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": false,
+            "name": "id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "name": "service_uuid",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 11
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "name": "user_key",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 11
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "name": "start_time",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "name": "end_time",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "name": "SubmitUsageRecordEvent"
+      }
+    ],
+    "messages": [
+      {
+        "args": [
+          {
+            "name": "service_uuid",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 11
+            }
+          },
+          {
+            "name": "user_key",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 11
+            }
+          },
+          {
+            "name": "start_time",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "end_time",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "usage",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "price_plan",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 11
+            }
+          },
+          {
+            "name": "cost",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          " A message that init a service."
+        ],
+        "mutates": true,
+        "name": [
+          "submit_usage"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 15
+        },
+        "selector": "0x6973ebbc"
+      },
+      {
+        "args": [
+          {
+            "name": "id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          " query service usage statistics by index"
+        ],
+        "mutates": false,
+        "name": [
+          "query_by_index"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "UsageRecord"
+          ],
+          "type": 10
+        },
+        "selector": "0xb7a35628"
+      },
+      {
+        "args": [
+          {
+            "name": "uuid",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 11
+            }
+          }
+        ],
+        "docs": [
+          " query service usage statistics by service uuid"
+        ],
+        "mutates": false,
+        "name": [
+          "query_by_service_uuid"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Vec"
+          ],
+          "type": 16
+        },
+        "selector": "0x1c5ca494"
+      },
+      {
+        "args": [
+          {
+            "name": "user_key",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 11
+            }
+          }
+        ],
+        "docs": [
+          " query service usage statistics by user key"
+        ],
+        "mutates": false,
+        "name": [
+          "query_by_user_key"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Vec"
+          ],
+          "type": 16
+        },
+        "selector": "0x5db0b93f"
+      }
+    ]
+  },
+  "storage": {
+    "struct": {
+      "fields": [
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "owner"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                      "ty": 1
+                    }
+                  },
+                  "name": "account_id"
+                }
+              ]
+            }
+          },
+          "name": "services"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "statistics_index"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
+                              "ty": 5
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+                                      "ty": 6
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0400000001000000000000000000000000000000000000000000000000000000",
+                                          "ty": 7
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0500000000000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0500000001000000000000000000000000000000000000000000000000000000",
+                          "ty": 9
+                        }
+                      },
+                      "offset": "0x0400000001000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "statistics_map"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0500000001000000000000000000000000000000000000000000000000000000",
+                              "ty": 5
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0600000001000000000000000000000000000000000000000000000000000000",
+                                      "ty": 6
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0600000002000000000000000000000000000000000000000000000000000000",
+                                          "ty": 12
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0700000001000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0700000002000000000000000000000000000000000000000000000000000000",
+                          "ty": 13
+                        }
+                      },
+                      "offset": "0x0600000002000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "services_map_by_uuid"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0700000002000000000000000000000000000000000000000000000000000000",
+                              "ty": 5
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0800000002000000000000000000000000000000000000000000000000000000",
+                                      "ty": 6
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0800000003000000000000000000000000000000000000000000000000000000",
+                                          "ty": 12
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0900000002000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0900000003000000000000000000000000000000000000000000000000000000",
+                          "ty": 13
+                        }
+                      },
+                      "offset": "0x0800000003000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "services_map_by_user_key"
+        }
+      ]
+    }
+  },
+  "types": [
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 2
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_env",
+        "types",
+        "AccountId"
+      ]
+    },
+    {
+      "def": {
+        "array": {
+          "len": 32,
+          "type": 3
+        }
+      }
+    },
+    {
+      "def": {
+        "primitive": "u8"
+      }
+    },
+    {
+      "def": {
+        "primitive": "u64"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "last_vacant",
+              "type": 6
+            },
+            {
+              "name": "len",
+              "type": 6
+            },
+            {
+              "name": "len_entries",
+              "type": 6
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Header"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "u32"
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 8
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 4
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        4
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "next",
+              "type": 6
+            },
+            {
+              "name": "prev",
+              "type": 6
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "VacantEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 10
+            },
+            {
+              "name": "key_index",
+              "type": 6
+            }
+          ]
+        }
+      },
+      "params": [
+        10
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "id",
+              "type": 4
+            },
+            {
+              "name": "service_uuid",
+              "type": 11
+            },
+            {
+              "name": "user_key",
+              "type": 11
+            },
+            {
+              "name": "start_time",
+              "type": 4
+            },
+            {
+              "name": "end_time",
+              "type": 4
+            },
+            {
+              "name": "usage",
+              "type": 4
+            },
+            {
+              "name": "price_plan",
+              "type": 11
+            },
+            {
+              "name": "cost",
+              "type": 4
+            }
+          ]
+        }
+      },
+      "path": [
+        "services_statistics",
+        "services_statistics",
+        "UsageRecord"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "str"
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 8
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 11
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        11
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 14
+            },
+            {
+              "name": "key_index",
+              "type": 6
+            }
+          ]
+        }
+      },
+      "params": [
+        14
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 4
+        }
+      }
+    },
+    {
+      "def": {
+        "primitive": "bool"
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 10
+        }
+      }
+    }
+  ]
+}
