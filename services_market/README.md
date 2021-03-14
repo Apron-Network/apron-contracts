@@ -56,6 +56,14 @@ type: query
 definition: pub fn query_service_by_uuid(&self, uuid: String) -> Service;
 ```
 
+
+### query service by provider
+query service by the provider address.
+```bash
+type: query
+definition: pub fn list_services_provider(&self) -> Vec<Service>;
+```
+
 ### list services
 list services.
 ```bash

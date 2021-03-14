@@ -53,6 +53,7 @@ mod services_market {
         // Store services
         services_map: StorageHashMap<u64, Service>,
         services_map_by_uuid: StorageHashMap<String, u64>,
+        services_map_by_provider: StorageHashMap<AccountId, Vec<u64>>,
     }
 
     #[ink(event)]
@@ -72,6 +73,7 @@ mod services_market {
                 services_index: 0,
                 services_map: Default::default(),
                 services_map_by_uuid: Default::default(),
+                services_map_by_provider: Default::default(),
             }
         }
 
@@ -88,7 +90,7 @@ mod services_market {
                 name,
                 create_time,
                 provider_name,
-                provider_owner,
+                provider_owner: provider_owner.clone(),
                 desc,
                 logo,
                 price_plan,
@@ -96,6 +98,8 @@ mod services_market {
                 declaimer,
             });
             self.services_map_by_uuid.insert(uuid.clone(), self.services_index);
+            let id_list = self.services_map_by_provider.entry(provider_owner).or_insert(Vec::new());
+            id_list.push(self.services_index);
             self.env().emit_event(AddServiceEvent {
                 service_id: self.services_index,
                 service_uuid: uuid,
@@ -127,6 +131,20 @@ mod services_market {
             let mut item = iter.next();
             while item.is_some() {
                 service_vec.push(item.unwrap().clone());
+                item = iter.next();
+            }
+            service_vec
+        }
+
+        /// query services
+        #[ink(message)]
+        pub fn list_services_provider(&self) -> Vec<Service> {
+            let caller = self.env().caller();
+            let mut service_vec = Vec::new();
+            let mut iter = self.services_map_by_provider.get(&caller).unwrap().into_iter();
+            let mut item = iter.next();
+            while item.is_some() {
+                service_vec.push(self.services_map.get(item.unwrap()).unwrap().clone());
                 item = iter.next();
             }
             service_vec
