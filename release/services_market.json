@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xe741122e48aa27ac3513d7efab490522150e35f8f93902af161180e081689c3c",
+    "hash": "0xe36056f8b8179d4100090901f0a1b092ad0517e7b3474b30d96cdd410677674d",
     "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "compiler": "rustc 1.52.0-nightly"
   },
   "contract": {
     "name": "services_market",

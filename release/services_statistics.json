@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x16ab9cc50d0640b1ead9245e0b44855e8b46815e6300dd105f3ea8f984a75115",
+    "hash": "0x1d32f6ea5e44ab266869df22bd60c945122eda9405e67ebe0551db5fe55e0db9",
     "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "compiler": "rustc 1.52.0-nightly"
   },
   "contract": {
     "name": "services_statistics",
@@ -190,6 +190,22 @@
           "type": 16
         },
         "selector": "0x6973ebbc"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "list_all_statistics"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Vec"
+          ],
+          "type": 17
+        },
+        "selector": "0x0ec3d2fb"
       },
       {
         "args": [

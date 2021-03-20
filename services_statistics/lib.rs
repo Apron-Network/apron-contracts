@@ -80,10 +80,12 @@ mod services_statistics {
         #[ink(message)]
         pub fn submit_usage(&mut self, service_uuid: String, user_key: String,
                             start_time: u64, end_time: u64, usage: u64, price_plan: String, cost: u64) -> bool {
-            let caller = self.env().caller();
             let service = self.services.query_service_by_uuid(service_uuid.clone());
 
-            assert_eq!(service.provider_owner == caller, true);
+            // fixme: temporally disable the check for hackathon demo
+            // let caller = self.env().caller();
+            // assert_eq!(service.provider_owner == caller, true);
+            
             assert_eq!(self.statistics_index + 1 > self.statistics_index, true);
 
             self.statistics_map.insert(self.statistics_index, UsageRecord {
@@ -113,6 +115,18 @@ mod services_statistics {
             });
             self.statistics_index += 1;
             true
+        }
+
+        #[ink(message)]
+        pub fn list_all_statistics(&self) -> Vec<UsageRecord> {
+            let mut record_vec = Vec::new();
+            let mut iter = self.statistics_map.values();
+            let mut item = iter.next();
+            while item.is_some() {
+                record_vec.push(item.unwrap().clone());
+                item = iter.next();
+            }
+            record_vec
         }
 
         /// query service usage statistics by index
