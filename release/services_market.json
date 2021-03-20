@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xe36056f8b8179d4100090901f0a1b092ad0517e7b3474b30d96cdd410677674d",
+    "hash": "0x77ef93f7d1f67aa417cce399f460526d67ae47ef0c8d7bb142cfe6e8ce2371ba",
     "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.52.0-nightly"
   },
@@ -156,6 +156,15 @@
           },
           {
             "name": "usage",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 11
+            }
+          },
+          {
+            "name": "schema",
             "type": {
               "displayName": [
                 "String"
@@ -746,6 +755,10 @@
             },
             {
               "name": "desc",
+              "type": 11
+            },
+            {
+              "name": "schema",
               "type": 11
             },
             {

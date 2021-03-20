@@ -40,6 +40,7 @@ mod services_market {
         pub name: String,
         pub logo: String,
         pub desc: String,
+        pub schema: String,
         pub usage: String,
         pub price_plan: String,
         pub declaimer: String,
@@ -80,7 +81,7 @@ mod services_market {
         /// A message that init a service.
         #[ink(message)]
         pub fn add_service(&mut self, uuid: String, name: String, desc: String, logo: String, create_time: u64,
-                           provider_name: String, provider_owner: AccountId, usage: String, price_plan: String, declaimer: String) -> bool {
+                           provider_name: String, provider_owner: AccountId, usage: String, schema: String, price_plan: String, declaimer: String) -> bool {
             let controller = self.env().caller();
             assert_eq!(controller == self.owner, true);
             assert_eq!(self.services_index + 1 > self.services_index, true);
@@ -95,6 +96,7 @@ mod services_market {
                 logo,
                 price_plan,
                 usage,
+                schema,
                 declaimer,
             });
             self.services_map_by_uuid.insert(uuid.clone(), self.services_index);
@@ -168,10 +170,11 @@ mod services_market {
             let provider_name = "provider".to_string();
             let provider_addr = accounts.alice;
             let usage = "usage of first service".to_string();
+            let schema = "http".to_string();
             let price_plan = "the price plan of first service".to_string();
             let declaimer = "the declaimer".to_string();
 
-            market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, price_plan, declaimer);
+            market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, schema, price_plan, declaimer);
 
             let services = market.list_services();
             let length = services.len() as u32;
