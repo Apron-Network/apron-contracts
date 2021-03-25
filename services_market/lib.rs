@@ -174,14 +174,159 @@ mod services_market {
             let price_plan = "the price plan of first service".to_string();
             let declaimer = "the declaimer".to_string();
 
-            market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, schema, price_plan, declaimer);
+            let ret = market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, schema, price_plan, declaimer);
+            assert!(ret);
 
             let services = market.list_services();
             let length = services.len() as u32;
             assert!(length == 1);
             for s in services{
                 let debug_msg = format!("service is {}, {}, {}, {}", &s.index, &s.uuid, &s.name, &s.provider_name);
-                ink_env::debug_println(&debug_msg)
+                ink_env::debug_println(&debug_msg);
+                assert_eq!("asdfsdfsdfsdfsdfsdfsdfasdf", s.uuid);
+                assert_eq!("first service", s.name);
+                assert_eq!("desc of service", s.desc);
+                assert_eq!("logo logo", s.logo);
+                assert_eq!(1615442616, s.create_time);
+                assert_eq!("provider", s.provider_name);
+                assert_eq!(accounts.alice, s.provider_owner);
+                assert_eq!("usage of first service", s.usage);
+                assert_eq!("http", s.schema);
+                assert_eq!("the price plan of first service", s.price_plan);
+                assert_eq!("the declaimer", s.declaimer);
+            }
+        }
+
+        #[ink::test]
+        fn add_service_invalid_owner() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut market = ServicesMarket::new(accounts.alice);
+
+            let uuid = "asdfsdfsdfsdfsdfsdfsdfasdf".to_string();
+            let name = "first service".to_string();
+            let desc = "desc of service".to_string();
+            let logo = "logo logo".to_string();
+            let create_time = 1615442616;
+            let provider_name = "provider".to_string();
+            let provider_addr = accounts.bob;
+            let usage = "usage of first service".to_string();
+            let schema = "http".to_string();
+            let price_plan = "the price plan of first service".to_string();
+            let declaimer = "the declaimer".to_string();
+
+            let ret = market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, schema, price_plan, declaimer);
+            assert_eq!(ret, true);
+        }
+
+        #[ink::test]
+        fn query_index_works() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut market = ServicesMarket::new(accounts.alice);
+
+            let uuid = "asdfsdfsdfsdfsdfsdfsdfasdf".to_string();
+            let name = "first service".to_string();
+            let desc = "desc of service".to_string();
+            let logo = "logo logo".to_string();
+            let create_time = 1615442616;
+            let provider_name = "provider".to_string();
+            let provider_addr = accounts.alice;
+            let usage = "usage of first service".to_string();
+            let schema = "http".to_string();
+            let price_plan = "the price plan of first service".to_string();
+            let declaimer = "the declaimer".to_string();
+
+            let ret = market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, schema, price_plan, declaimer);
+            assert_eq!(ret, true);
+
+            let s = market.query_service_by_index(0);
+            let debug_msg = format!("service is {}, {}, {}, {}", &s.index, &s.uuid, &s.name, &s.provider_name);
+            ink_env::debug_println(&debug_msg);
+            assert_eq!("asdfsdfsdfsdfsdfsdfsdfasdf", s.uuid);
+            assert_eq!("first service", s.name);
+            assert_eq!("desc of service", s.desc);
+            assert_eq!("logo logo", s.logo);
+            assert_eq!(1615442616, s.create_time);
+            assert_eq!("provider", s.provider_name);
+            assert_eq!(accounts.alice, s.provider_owner);
+            assert_eq!("usage of first service", s.usage);
+            assert_eq!("http", s.schema);
+            assert_eq!("the price plan of first service", s.price_plan);
+            assert_eq!("the declaimer", s.declaimer);
+        }
+
+        #[ink::test]
+        fn query_uuid_works() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut market = ServicesMarket::new(accounts.alice);
+
+            let uuid = "asdfsdfsdfsdfsdfsdfsdfasdf".to_string();
+            let name = "first service".to_string();
+            let desc = "desc of service".to_string();
+            let logo = "logo logo".to_string();
+            let create_time = 1615442616;
+            let provider_name = "provider".to_string();
+            let provider_addr = accounts.alice;
+            let usage = "usage of first service".to_string();
+            let schema = "http".to_string();
+            let price_plan = "the price plan of first service".to_string();
+            let declaimer = "the declaimer".to_string();
+
+            let ret = market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, schema, price_plan, declaimer);
+            assert_eq!(ret, true);
+
+            let s = market.query_service_by_uuid("asdfsdfsdfsdfsdfsdfsdfasdf".to_string());
+            let debug_msg = format!("service is {}, {}, {}, {}", &s.index, &s.uuid, &s.name, &s.provider_name);
+            ink_env::debug_println(&debug_msg);
+            assert_eq!("asdfsdfsdfsdfsdfsdfsdfasdf", s.uuid);
+            assert_eq!("first service", s.name);
+            assert_eq!("desc of service", s.desc);
+            assert_eq!("logo logo", s.logo);
+            assert_eq!(1615442616, s.create_time);
+            assert_eq!("provider", s.provider_name);
+            assert_eq!(accounts.alice, s.provider_owner);
+            assert_eq!("usage of first service", s.usage);
+            assert_eq!("http", s.schema);
+            assert_eq!("the price plan of first service", s.price_plan);
+            assert_eq!("the declaimer", s.declaimer);
+        }
+
+        #[ink::test]
+        fn list_by_provider_works() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut market = ServicesMarket::new(accounts.alice);
+
+            let uuid = "asdfsdfsdfsdfsdfsdfsdfasdf".to_string();
+            let name = "first service".to_string();
+            let desc = "desc of service".to_string();
+            let logo = "logo logo".to_string();
+            let create_time = 1615442616;
+            let provider_name = "provider".to_string();
+            let provider_addr = accounts.alice;
+            let usage = "usage of first service".to_string();
+            let schema = "http".to_string();
+            let price_plan = "the price plan of first service".to_string();
+            let declaimer = "the declaimer".to_string();
+
+            let ret = market.add_service(uuid, name, desc, logo, create_time, provider_name, provider_addr, usage, schema, price_plan, declaimer);
+            assert!(ret);
+
+            let services = market.list_services_provider(accounts.alice);
+            let length = services.len() as u32;
+            assert!(length == 1);
+            for s in services{
+                let debug_msg = format!("service is {}, {}, {}, {}", &s.index, &s.uuid, &s.name, &s.provider_name);
+                ink_env::debug_println(&debug_msg);
+                assert_eq!("asdfsdfsdfsdfsdfsdfsdfasdf", s.uuid);
+                assert_eq!("first service", s.name);
+                assert_eq!("desc of service", s.desc);
+                assert_eq!("logo logo", s.logo);
+                assert_eq!(1615442616, s.create_time);
+                assert_eq!("provider", s.provider_name);
+                assert_eq!(accounts.alice, s.provider_owner);
+                assert_eq!("usage of first service", s.usage);
+                assert_eq!("http", s.schema);
+                assert_eq!("the price plan of first service", s.price_plan);
+                assert_eq!("the declaimer", s.declaimer);
             }
         }
     }
