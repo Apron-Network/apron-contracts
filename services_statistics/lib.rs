@@ -42,7 +42,7 @@ mod services_statistics {
     pub struct ServicesStatistics {
         // Store a contract owner
         owner: AccountId,
-        services: ServicesMarket,
+        services: Option<ServicesMarket>,
         statistics_index: u64,
         // Store services statistics
         statistics_map: StorageHashMap<u64, UsageRecord>,
@@ -67,7 +67,7 @@ mod services_statistics {
             let contract_instance: ServicesMarket = ink_env::call::FromAccountId::from_account_id(services_addr);
             Self {
                 owner: controller,
-                services: contract_instance,
+                services: Some(contract_instance),
                 statistics_index: 0,
                 statistics_map: Default::default(),
                 services_map_by_uuid: Default::default(),
@@ -80,7 +80,10 @@ mod services_statistics {
         #[ink(message)]
         pub fn submit_usage(&mut self, service_uuid: String, user_key: String,
                             start_time: u64, end_time: u64, usage: u64, price_plan: String, cost: u64) -> bool {
-            let service = self.services.query_service_by_uuid(service_uuid.clone());
+
+            assert_eq!(self.services.is_some(), true);
+            let service = self.services.as_ref().unwrap().query_service_by_uuid(service_uuid.clone());
+            let provider_addr = service.provider_owner;
 
             // fixme: temporally disable the check for hackathon demo
             // let caller = self.env().caller();
@@ -103,7 +106,7 @@ mod services_statistics {
             uuid_ids.push(self.statistics_index);
             let user_key_ids = self.services_map_by_user_key.entry(user_key.clone()).or_insert(Vec::new());
             user_key_ids.push(self.statistics_index);
-            let provider_ids = self.services_map_by_provider.entry(service.provider_owner.clone()).or_insert(Vec::new());
+            let provider_ids = self.services_map_by_provider.entry(provider_addr.clone()).or_insert(Vec::new());
             provider_ids.push(self.statistics_index);
 
             self.env().emit_event(SubmitUsageRecordEvent {
@@ -183,9 +186,121 @@ mod services_statistics {
         use super::*;
         use ink_lang as ink;
 
+        fn initContract() -> ServicesStatistics {
+            let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            ServicesStatistics{
+                owner: accounts.alice,
+                services: None,
+                statistics_index: 0,
+                statistics_map: Default::default(),
+                services_map_by_uuid: Default::default(),
+                services_map_by_user_key: Default::default(),
+                services_map_by_provider: Default::default(),
+            }
+        }
+
         #[ink::test]
-        fn default_works() {
-            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+        #[should_panic]
+        fn submit_usage() {
+            let mut stats = initContract();
+            let result = stats.submit_usage(String::from("59186d9a-ed85-4395-86a4-d58a7ab35f49"), String::from("5a9174970861974b524d566a"),
+                                       1616739098000, 1616739698000, 10000, String::from("1/per 10000"), 1);
+            assert!(result);
+        }
+
+        #[ink::test]
+        #[should_panic]
+        fn query_by_index() {
+            let mut stats = initContract();
+            let uuid = "59186d9a-ed85-4395-86a4-d58a7ab35f49";
+            let user_key = "5a9174970861974b524d566a";
+            let start_time = 1616739098000;
+            let end_time = 1616739698000;
+            let usage = 10000;
+            let price_plan = "1/per 10000";
+            let cost = 1;
+            stats.submit_usage(uuid.to_string(), user_key.to_string(), start_time, end_time, usage, price_plan.to_string(), cost);
+            let record = stats.query_by_index(0);
+            assert_eq!(uuid, record.service_uuid);
+            assert_eq!(user_key, record.user_key);
+            assert_eq!(start_time, record.start_time);
+            assert_eq!(end_time, record.end_time);
+            assert_eq!(usage, record.usage);
+            assert_eq!(price_plan, record.price_plan);
+            assert_eq!(cost, record.cost);
+        }
+
+        #[ink::test]
+        #[should_panic]
+        fn query_by_provider() {
+            let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut stats = initContract();
+            let uuid = "59186d9a-ed85-4395-86a4-d58a7ab35f49";
+            let user_key = "5a9174970861974b524d566a";
+            let start_time = 1616739098000;
+            let end_time = 1616739698000;
+            let usage = 10000;
+            let price_plan = "1/per 10000";
+            let cost = 1;
+            stats.submit_usage(uuid.to_string(), user_key.to_string(), start_time, end_time, usage, price_plan.to_string(), cost);
+            let records = stats.query_by_provider(accounts.alice);
+            assert_eq!(1, records.len());
+            let record = &records[0];
+            assert_eq!(uuid, record.service_uuid);
+            assert_eq!(user_key, record.user_key);
+            assert_eq!(start_time, record.start_time);
+            assert_eq!(end_time, record.end_time);
+            assert_eq!(usage, record.usage);
+            assert_eq!(price_plan, record.price_plan);
+            assert_eq!(cost, record.cost);
+        }
+
+        #[ink::test]
+        #[should_panic]
+        fn query_by_service_uuid() {
+            let mut stats = initContract();
+            let uuid = "59186d9a-ed85-4395-86a4-d58a7ab35f49";
+            let user_key = "5a9174970861974b524d566a";
+            let start_time = 1616739098000;
+            let end_time = 1616739698000;
+            let usage = 10000;
+            let price_plan = "1/per 10000";
+            let cost = 1;
+            stats.submit_usage(uuid.to_string(), user_key.to_string(), start_time, end_time, usage, price_plan.to_string(), cost);
+            let records = stats.query_by_service_uuid(uuid.to_string());
+            assert_eq!(1, records.len());
+            let record = &records[0];
+            assert_eq!(uuid, record.service_uuid);
+            assert_eq!(user_key, record.user_key);
+            assert_eq!(start_time, record.start_time);
+            assert_eq!(end_time, record.end_time);
+            assert_eq!(usage, record.usage);
+            assert_eq!(price_plan, record.price_plan);
+            assert_eq!(cost, record.cost);
+        }
+
+        #[ink::test]
+        #[should_panic]
+        fn query_by_user_key() {
+            let mut stats = initContract();
+            let uuid = "59186d9a-ed85-4395-86a4-d58a7ab35f49";
+            let user_key = "5a9174970861974b524d566a";
+            let start_time = 1616739098000;
+            let end_time = 1616739698000;
+            let usage = 10000;
+            let price_plan = "1/per 10000";
+            let cost = 1;
+            stats.submit_usage(uuid.to_string(), user_key.to_string(), start_time, end_time, usage, price_plan.to_string(), cost);
+            let records = stats.query_by_user_key(user_key.to_string());
+            assert_eq!(1, records.len());
+            let record = &records[0];
+            assert_eq!(uuid, record.service_uuid);
+            assert_eq!(user_key, record.user_key);
+            assert_eq!(start_time, record.start_time);
+            assert_eq!(end_time, record.end_time);
+            assert_eq!(usage, record.usage);
+            assert_eq!(price_plan, record.price_plan);
+            assert_eq!(cost, record.cost);
         }
     }
 }
