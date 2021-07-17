@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x698a3e4d1c139f732305dfe843a1f6654d5310637544bd0ea4c5e2d9fb1a875c",
-    "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.52.0-nightly"
+    "hash": "0xa302db4faf799f258ac7b23404657c5d5ce7f5c9ec0cf83703343e24fab26f17",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.54.0-nightly"
   },
   "contract": {
     "name": "services_statistics",
@@ -36,12 +36,12 @@
           }
         ],
         "docs": [
-          " Constructor that initializes the `bool` value to the given `init_value`."
+          "Constructor that initializes the `bool` value to the given `init_value`."
         ],
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       }
     ],
     "docs": [],
@@ -189,7 +189,7 @@
           ],
           "type": 16
         },
-        "selector": "0x6973ebbc"
+        "selector": "0x31ad3b6e"
       },
       {
         "args": [],
@@ -205,7 +205,7 @@
           ],
           "type": 17
         },
-        "selector": "0x0ec3d2fb"
+        "selector": "0x583d74ce"
       },
       {
         "args": [
@@ -233,7 +233,7 @@
           ],
           "type": 10
         },
-        "selector": "0xb7a35628"
+        "selector": "0xc4fdde3d"
       },
       {
         "args": [
@@ -261,7 +261,7 @@
           ],
           "type": 17
         },
-        "selector": "0x1c5ca494"
+        "selector": "0x5a96c5ff"
       },
       {
         "args": [
@@ -289,7 +289,7 @@
           ],
           "type": 17
         },
-        "selector": "0x5db0b93f"
+        "selector": "0xdc7a6d5b"
       },
       {
         "args": [
@@ -317,7 +317,7 @@
           ],
           "type": 17
         },
-        "selector": "0x83b10bd0"
+        "selector": "0xe1bf2816"
       }
     ]
   },
@@ -335,18 +335,35 @@
         },
         {
           "layout": {
-            "struct": {
-              "fields": [
-                {
-                  "layout": {
-                    "cell": {
-                      "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
-                      "ty": 1
+            "enum": {
+              "dispatchKey": "0x0100000000000000000000000000000000000000000000000000000000000000",
+              "variants": {
+                "0": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "struct": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+                                  "ty": 1
+                                }
+                              },
+                              "name": "account_id"
+                            }
+                          ]
+                        }
+                      },
+                      "name": null
                     }
-                  },
-                  "name": "account_id"
+                  ]
+                },
+                "1": {
+                  "fields": []
                 }
-              ]
+              }
             }
           },
           "name": "services"
@@ -689,7 +706,8 @@
         "composite": {
           "fields": [
             {
-              "type": 2
+              "type": 2,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -724,15 +742,18 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             },
             {
               "name": "len",
-              "type": 6
+              "type": 6,
+              "typeName": "u32"
             },
             {
               "name": "len_entries",
-              "type": 6
+              "type": 6,
+              "typeName": "u32"
             }
           ]
         }
@@ -756,7 +777,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -764,7 +786,8 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 4,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -788,11 +811,13 @@
           "fields": [
             {
               "name": "next",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             },
             {
               "name": "prev",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             }
           ]
         }
@@ -810,11 +835,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 10
+              "type": 10,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 6,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -835,35 +862,43 @@
           "fields": [
             {
               "name": "id",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "service_uuid",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "user_key",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "start_time",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "end_time",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "usage",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "price_plan",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "cost",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             }
           ]
         }
@@ -886,7 +921,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -894,7 +930,8 @@
             {
               "fields": [
                 {
-                  "type": 11
+                  "type": 11,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -918,11 +955,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 14
+              "type": 14,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 6,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -951,7 +990,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -959,7 +999,8 @@
             {
               "fields": [
                 {
-                  "type": 1
+                  "type": 1,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"

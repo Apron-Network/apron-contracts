@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x77ef93f7d1f67aa417cce399f460526d67ae47ef0c8d7bb142cfe6e8ce2371ba",
-    "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.52.0-nightly"
+    "hash": "0x76575135a5f77f28fbc13256687dd95b859e6b1d7f2fb80d2194a59df7947776",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.54.0-nightly"
   },
   "contract": {
     "name": "services_market",
@@ -27,12 +27,12 @@
           }
         ],
         "docs": [
-          " Constructor that initializes the `bool` value to the given `init_value`."
+          "Constructor that initializes the `bool` value to the given `init_value`."
         ],
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       }
     ],
     "docs": [],
@@ -205,7 +205,7 @@
           ],
           "type": 17
         },
-        "selector": "0x30aeef1b"
+        "selector": "0x17defac4"
       },
       {
         "args": [
@@ -233,7 +233,7 @@
           ],
           "type": 10
         },
-        "selector": "0x1424180a"
+        "selector": "0x9f02843f"
       },
       {
         "args": [
@@ -261,7 +261,7 @@
           ],
           "type": 10
         },
-        "selector": "0x8326b370"
+        "selector": "0x8fcff46e"
       },
       {
         "args": [],
@@ -279,7 +279,7 @@
           ],
           "type": 18
         },
-        "selector": "0xa9f18e7a"
+        "selector": "0xa3f5f5be"
       },
       {
         "args": [
@@ -307,7 +307,7 @@
           ],
           "type": 18
         },
-        "selector": "0x18612d4c"
+        "selector": "0x937686fe"
       }
     ]
   },
@@ -581,7 +581,8 @@
         "composite": {
           "fields": [
             {
-              "type": 2
+              "type": 2,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -616,15 +617,18 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             },
             {
               "name": "len",
-              "type": 6
+              "type": 6,
+              "typeName": "u32"
             },
             {
               "name": "len_entries",
-              "type": 6
+              "type": 6,
+              "typeName": "u32"
             }
           ]
         }
@@ -648,7 +652,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -656,7 +661,8 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 4,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -680,11 +686,13 @@
           "fields": [
             {
               "name": "next",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             },
             {
               "name": "prev",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             }
           ]
         }
@@ -702,11 +710,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 10
+              "type": 10,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 6,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -727,51 +737,63 @@
           "fields": [
             {
               "name": "index",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "uuid",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "provider_name",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "provider_owner",
-              "type": 1
+              "type": 1,
+              "typeName": "AccountId"
             },
             {
               "name": "create_time",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "name",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "logo",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "desc",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "schema",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "usage",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "price_plan",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             },
             {
               "name": "declaimer",
-              "type": 11
+              "type": 11,
+              "typeName": "String"
             }
           ]
         }
@@ -794,7 +816,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -802,7 +825,8 @@
             {
               "fields": [
                 {
-                  "type": 11
+                  "type": 11,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -826,11 +850,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 4
+              "type": 4,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 6,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -852,7 +878,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -860,7 +887,8 @@
             {
               "fields": [
                 {
-                  "type": 1
+                  "type": 1,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -884,11 +912,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 16
+              "type": 16,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 6,
+              "typeName": "KeyIndex"
             }
           ]
         }
