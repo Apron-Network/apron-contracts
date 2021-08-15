@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xc55997717501973697c160689d1bf5948cae54c9e4a88e3c1930c14998b57059",
+    "hash": "0x17c1689f3d82f5c6fa0ed6ea01281205f52a945cad456ac49c02471f32831cd4",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.54.0-nightly"
   },
@@ -334,12 +334,47 @@
       {
         "args": [
           {
+            "name": "params",
+            "type": {
+              "displayName": [
+                "PageParams"
+              ],
+              "type": 19
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "list_services_by_page"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "PageResult"
+          ],
+          "type": 20
+        },
+        "selector": "0x23fda8ea"
+      },
+      {
+        "args": [
+          {
             "name": "provider",
             "type": {
               "displayName": [
                 "AccountId"
               ],
               "type": 1
+            }
+          },
+          {
+            "name": "params",
+            "type": {
+              "displayName": [
+                "PageParams"
+              ],
+              "type": 19
             }
           }
         ],
@@ -353,9 +388,9 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "Vec"
+            "PageResult"
           ],
-          "type": 18
+          "type": 20
         },
         "selector": "0x937686fe"
       }
@@ -1001,6 +1036,80 @@
           "type": 10
         }
       }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "page_index",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "page_size",
+              "type": 4,
+              "typeName": "u64"
+            }
+          ]
+        }
+      },
+      "path": [
+        "page_helper",
+        "page_helper",
+        "PageParams"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "success",
+              "type": 17,
+              "typeName": "bool"
+            },
+            {
+              "name": "err",
+              "type": 11,
+              "typeName": "String"
+            },
+            {
+              "name": "total",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "pages",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "page_index",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "page_size",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "data",
+              "type": 18,
+              "typeName": "Vec<T>"
+            }
+          ]
+        }
+      },
+      "params": [
+        10
+      ],
+      "path": [
+        "page_helper",
+        "page_helper",
+        "PageResult"
+      ]
     }
   ]
 }
