@@ -15,9 +15,9 @@ function build_module() {
       exit 1
     fi
     echo "copy to ../release"
-    cp ${m_dir}/target/${m_name}.wasm ../release/${m_name}.wasm
-    cp ${m_dir}/target/${m_name}.contract ../release/${m_name}.contract
-    cp ${m_dir}/target/metadata.json ../release/${m_name}.json
+    cp ${m_dir}/target/ink/${m_name}.wasm ../release/${m_name}.wasm
+    cp ${m_dir}/target/ink/${m_name}.contract ../release/${m_name}.contract
+    cp ${m_dir}/target/ink/metadata.json ../release/${m_name}.json
     cd -
 }
 

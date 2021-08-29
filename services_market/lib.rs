@@ -17,7 +17,6 @@ mod services_market {
         },
         collections::{
             HashMap as StorageHashMap,
-            Vec as StorageVec,
         }
     };
 
@@ -65,6 +64,14 @@ mod services_market {
         create_time: u64,
     }
 
+    #[ink(event)]
+    pub struct UpdateServiceEvent {
+        service_id: u64,
+        service_uuid: String,
+        provider_owner: AccountId,
+        create_time: u64,
+    }
+
     impl ServicesMarket {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
@@ -84,6 +91,30 @@ mod services_market {
                            provider_name: String, provider_owner: AccountId, usage: String, schema: String, price_plan: String, declaimer: String) -> bool {
             let controller = self.env().caller();
             assert_eq!(controller == self.owner, true);
+            let index_opt = self.services_map_by_uuid.get(&uuid);
+            if let Some(&index) = index_opt {
+                self.services_map.insert(index, Service {
+                    index,
+                    uuid: uuid.clone(),
+                    name,
+                    create_time,
+                    provider_name,
+                    provider_owner: provider_owner.clone(),
+                    desc,
+                    logo,
+                    price_plan,
+                    usage,
+                    schema,
+                    declaimer,
+                });
+                self.env().emit_event(UpdateServiceEvent {
+                    service_id: index,
+                    service_uuid: uuid,
+                    provider_owner,
+                    create_time,
+                });
+                return true
+            }
             assert_eq!(self.services_index + 1 > self.services_index, true);
             self.services_map.insert(self.services_index, Service {
                 index: self.services_index,
