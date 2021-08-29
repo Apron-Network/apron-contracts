@@ -19,6 +19,8 @@ mod services_market {
             HashMap as StorageHashMap,
         }
     };
+    use page_helper::PageParams;
+    use page_helper::PageResult;
 
     // service information
     #[derive(Debug, scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout,)]
@@ -169,17 +171,61 @@ mod services_market {
             service_vec
         }
 
+        #[ink(message)]
+        pub fn list_services_by_page(&self, params: PageParams) -> PageResult<Service> {
+            let total = self.services_map.len() as u64;
+            let (start, end, pages) = self.calPages(&params, total);
+            let mut service_vec = Vec::new();
+            for i in start..end {
+                let opt = self.services_map.get(&i);
+                if let Some(s) = opt {
+                    service_vec.push(s.clone());
+                }
+            }
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page_index: params.page_index,
+                page_size: params.page_size,
+                data: service_vec,
+            }
+        }
+
         /// query services
         #[ink(message)]
-        pub fn list_services_provider(&self, provider: AccountId) -> Vec<Service> {
+        pub fn list_services_provider(&self, provider: AccountId, params: PageParams) -> PageResult<Service> {
+            let provider_ids = self.services_map_by_provider.get(&provider).unwrap();
+            let total = provider_ids.len() as u64;
+            let (start, end, pages) = self.calPages(&params, total);
             let mut service_vec = Vec::new();
-            let mut iter = self.services_map_by_provider.get(&provider).unwrap().into_iter();
-            let mut item = iter.next();
-            while item.is_some() {
-                service_vec.push(self.services_map.get(item.unwrap()).unwrap().clone());
-                item = iter.next();
+            for i in start..end {
+                service_vec.push(self.services_map.get(&provider_ids[i as usize]).unwrap().clone());
             }
-            service_vec
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page_index: params.page_index,
+                page_size: params.page_size,
+                data: service_vec,
+            }
+        }
+
+        fn calPages(&self, params: &PageParams, total: u64) -> (u64, u64, u64) {
+            let start = params.page_index * params.page_size;
+            let mut end = start + params.page_size;
+            if end > total {
+                end = total
+            }
+            assert!(params.page_size <= 0 || start >= total || start < end, "wrong params");
+            let mut pages = total / params.page_size;
+            if total % params.page_size > 0 {
+                pages += 1;
+            }
+            (start, end, pages)
         }
     }
 

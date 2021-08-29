@@ -20,6 +20,8 @@ mod services_statistics {
     };
     use services_market::ServicesMarket;
     use services_market::Service;
+    use page_helper::PageParams;
+    use page_helper::PageResult;
 
     // service information
     #[derive(Debug, scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout,)]
@@ -138,46 +140,103 @@ mod services_statistics {
             self.statistics_map.get(&id).unwrap().clone()
         }
 
+        #[ink(message)]
+        pub fn list_all_statistics_by_page(&self, params: PageParams) -> PageResult<UsageRecord> {
+            let total = self.statistics_map.len() as u64;
+            let (start, end, pages) = self.calPages(&params, total);
+            let mut record_vec = Vec::new();
+            for i in start..end {
+                let opt = self.statistics_map.get(&i);
+                if let Some(s) = opt {
+                    record_vec.push(s.clone());
+                }
+            }
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page_index: params.page_index,
+                page_size: params.page_size,
+                data: record_vec,
+            }
+        }
+
         /// query service usage statistics by service uuid
         #[ink(message)]
-        pub fn query_by_service_uuid(&self, uuid: String) -> Vec<UsageRecord> {
+        pub fn query_by_service_uuid(&self, uuid: String, params: PageParams) -> PageResult<UsageRecord> {
             let uuid_ids = self.services_map_by_uuid.get(&uuid).unwrap();
+            let total = uuid_ids.len() as u64;
+            let (start, end, pages) = self.calPages(&params, total);
             let mut service_vec = Vec::new();
-            let mut uuid_ids_iter = uuid_ids.into_iter();
-            let mut item = uuid_ids_iter.next();
-            while item.is_some() {
-                service_vec.push(self.statistics_map.get(item.unwrap()).unwrap().clone());
-                item = uuid_ids_iter.next();
+            for i in start..end {
+                service_vec.push(self.statistics_map.get(&uuid_ids[i as usize]).unwrap().clone());
             }
-            service_vec
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page_index: params.page_index,
+                page_size: params.page_size,
+                data: service_vec,
+            }
         }
 
         /// query service usage statistics by user key
         #[ink(message)]
-        pub fn query_by_user_key(&self, user_key: String) -> Vec<UsageRecord> {
+        pub fn query_by_user_key(&self, user_key: String, params: PageParams) -> PageResult<UsageRecord> {
             let user_key_ids = self.services_map_by_user_key.get(&user_key).unwrap();
+            let total = user_key_ids.len() as u64;
+            let (start, end, pages) = self.calPages(&params, total);
             let mut service_vec = Vec::new();
-            let mut iter = user_key_ids.into_iter();
-            let mut item = iter.next();
-            while item.is_some() {
-                service_vec.push(self.statistics_map.get(item.unwrap()).unwrap().clone());
-                item = iter.next();
+            for i in start..end {
+                service_vec.push(self.statistics_map.get(&user_key_ids[i as usize]).unwrap().clone());
             }
-            service_vec
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page_index: params.page_index,
+                page_size: params.page_size,
+                data: service_vec,
+            }
         }
 
         /// query service usage statistics by provider
         #[ink(message)]
-        pub fn query_by_provider(&self, provider: AccountId) -> Vec<UsageRecord> {
+        pub fn query_by_provider(&self, provider: AccountId, params: PageParams) -> PageResult<UsageRecord> {
             let provider_ids = self.services_map_by_provider.get(&provider).unwrap();
+            let total = provider_ids.len() as u64;
+            let (start, end, pages) = self.calPages(&params, total);
             let mut service_vec = Vec::new();
-            let mut iter = provider_ids.into_iter();
-            let mut item = iter.next();
-            while item.is_some() {
-                service_vec.push(self.statistics_map.get(item.unwrap()).unwrap().clone());
-                item = iter.next();
+            for i in start..end {
+                service_vec.push(self.statistics_map.get(&provider_ids[i as usize]).unwrap().clone());
             }
-            service_vec
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page_index: params.page_index,
+                page_size: params.page_size,
+                data: service_vec,
+            }
+        }
+
+        fn calPages(&self, params: &PageParams, total: u64) -> (u64, u64, u64) {
+            let start = params.page_index * params.page_size;
+            let mut end = start + params.page_size;
+            if end > total {
+                end = total
+            }
+            assert!(params.page_size <= 0 || start >= total || start < end, "wrong params");
+            let mut pages = total / params.page_size;
+            if total % params.page_size > 0 {
+                pages += 1;
+            }
+            (start, end, pages)
         }
     }
 
