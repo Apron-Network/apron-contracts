@@ -47,6 +47,7 @@ mod services_statistics {
         services: Option<ServicesMarket>,
         statistics_index: u64,
         // Store services statistics
+        services_nonce: StorageHashMap<u64, u64>,
         statistics_map: StorageHashMap<u64, UsageRecord>,
         services_map_by_uuid: StorageHashMap<String, Vec<u64>>,
         services_map_by_user_key: StorageHashMap<String, Vec<u64>>,
@@ -71,6 +72,7 @@ mod services_statistics {
                 owner: controller,
                 services: Some(contract_instance),
                 statistics_index: 0,
+                services_nonce: Default::default(),
                 statistics_map: Default::default(),
                 services_map_by_uuid: Default::default(),
                 services_map_by_user_key: Default::default(),
@@ -80,19 +82,23 @@ mod services_statistics {
 
         /// A message that init a service.
         #[ink(message)]
-        pub fn submit_usage(&mut self, service_uuid: String, user_key: String,
+        pub fn submit_usage(&mut self, service_uuid: String, nonce: u64, user_key: String,
                             start_time: u64, end_time: u64, usage: u64, price_plan: String, cost: u64) -> bool {
 
             assert_eq!(self.services.is_some(), true);
             let service = self.services.as_ref().unwrap().query_service_by_uuid(service_uuid.clone());
             let provider_addr = service.provider_owner;
 
-            // fixme: temporally disable the check for hackathon demo
-            // let caller = self.env().caller();
-            // assert_eq!(service.provider_owner == caller, true);
+            // validate the uploader must service provider
+            let caller = self.env().caller();
+            assert_eq!(service.provider_owner == caller, true);
+
+            // check upload nonce for duplication of usage
+            let &mut cur_nonce = self.services_nonce.entry(service.index).or_insert(0);
+            assert_eq!(cur_nonce == nonce, true);
+            self.services_nonce.insert(service.index, nonce + 1);
             
             assert_eq!(self.statistics_index + 1 > self.statistics_index, true);
-
             self.statistics_map.insert(self.statistics_index, UsageRecord {
                 id: self.statistics_index,
                 service_uuid: service_uuid.clone(),
@@ -120,6 +126,16 @@ mod services_statistics {
             });
             self.statistics_index += 1;
             true
+        }
+
+        #[ink(message)]
+        pub fn query_service_nonce(&mut self, service_uuid: String) -> u64 {
+
+            assert_eq!(self.services.is_some(), true);
+            let service = self.services.as_ref().unwrap().query_service_by_uuid(service_uuid.clone());
+
+            let &mut nonce = self.services_nonce.entry(service.index).or_insert(0);
+            nonce
         }
 
         #[ink(message)]

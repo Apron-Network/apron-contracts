@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x17c1689f3d82f5c6fa0ed6ea01281205f52a945cad456ac49c02471f32831cd4",
+    "hash": "0xe6c1b12147cda5a11239fdc24c8234bc3724c92b0483ae6dc4f3d06577eff0b5",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.54.0-nightly"
   },
@@ -142,6 +142,43 @@
       {
         "args": [
           {
+            "name": "provider_id",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "allowed_provider"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0x02640955"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "query_allowed_providers"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Vec"
+          ],
+          "type": 19
+        },
+        "selector": "0xb9fbba1d"
+      },
+      {
+        "args": [
+          {
             "name": "uuid",
             "type": {
               "displayName": [
@@ -253,7 +290,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 17
+          "type": 18
         },
         "selector": "0x17defac4"
       },
@@ -327,7 +364,7 @@
           "displayName": [
             "Vec"
           ],
-          "type": 18
+          "type": 20
         },
         "selector": "0xa3f5f5be"
       },
@@ -339,7 +376,7 @@
               "displayName": [
                 "PageParams"
               ],
-              "type": 19
+              "type": 21
             }
           }
         ],
@@ -353,7 +390,7 @@
           "displayName": [
             "PageResult"
           ],
-          "type": 20
+          "type": 22
         },
         "selector": "0x23fda8ea"
       },
@@ -374,7 +411,7 @@
               "displayName": [
                 "PageParams"
               ],
-              "type": 19
+              "type": 21
             }
           }
         ],
@@ -390,7 +427,7 @@
           "displayName": [
             "PageResult"
           ],
-          "type": 20
+          "type": 22
         },
         "selector": "0x937686fe"
       }
@@ -656,6 +693,86 @@
             }
           },
           "name": "services_map_by_provider"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0800000003000000000000000000000000000000000000000000000000000000",
+                              "ty": 5
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0900000003000000000000000000000000000000000000000000000000000000",
+                                      "ty": 6
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0900000004000000000000000000000000000000000000000000000000000000",
+                                          "ty": 14
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0a00000003000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0a00000004000000000000000000000000000000000000000000000000000000",
+                          "ty": 17
+                        }
+                      },
+                      "offset": "0x0900000004000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "allowed_provider_id_list"
         }
       ]
     }
@@ -1027,7 +1144,41 @@
     },
     {
       "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 18,
+              "typeName": "V"
+            },
+            {
+              "name": "key_index",
+              "type": 6,
+              "typeName": "KeyIndex"
+            }
+          ]
+        }
+      },
+      "params": [
+        18
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
         "primitive": "bool"
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 1
+        }
       }
     },
     {
@@ -1066,7 +1217,7 @@
           "fields": [
             {
               "name": "success",
-              "type": 17,
+              "type": 18,
               "typeName": "bool"
             },
             {
@@ -1096,7 +1247,7 @@
             },
             {
               "name": "data",
-              "type": 18,
+              "type": 20,
               "typeName": "Vec<T>"
             }
           ]

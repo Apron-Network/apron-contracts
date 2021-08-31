@@ -56,6 +56,7 @@ mod services_market {
         services_map: StorageHashMap<u64, Service>,
         services_map_by_uuid: StorageHashMap<String, u64>,
         services_map_by_provider: StorageHashMap<AccountId, Vec<u64>>,
+        allowed_provider_id_list: StorageHashMap<AccountId, bool>,
     }
 
     #[ink(event)]
@@ -78,13 +79,35 @@ mod services_market {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
         pub fn new(controller: AccountId) -> Self {
-            Self {
+            let mut services_market = Self {
                 owner: controller,
                 services_index: 0,
                 services_map: Default::default(),
                 services_map_by_uuid: Default::default(),
                 services_map_by_provider: Default::default(),
+                allowed_provider_id_list: Default::default(),
+            };
+            services_market.allowed_provider_id_list.insert(controller, true);
+            services_market
+        }
+
+        #[ink(message)]
+        pub fn allowed_provider(&mut self, provider_id: AccountId) {
+            let controller = self.env().caller();
+            assert_eq!(controller == self.owner, true);
+            self.allowed_provider_id_list.insert(controller, true);
+        }
+
+        #[ink(message)]
+        pub fn query_allowed_providers(&mut self) -> Vec<AccountId> {
+            let mut res_vec = Vec::new();
+            let mut iter = self.allowed_provider_id_list.keys();
+            let mut item = iter.next();
+            while item.is_some() {
+                res_vec.push(item.unwrap().clone());
+                item = iter.next();
             }
+            res_vec
         }
 
         /// A message that init a service.
@@ -92,7 +115,7 @@ mod services_market {
         pub fn add_service(&mut self, uuid: String, name: String, desc: String, logo: String, create_time: u64,
                            provider_name: String, provider_owner: AccountId, usage: String, schema: String, price_plan: String, declaimer: String) -> bool {
             let controller = self.env().caller();
-            assert_eq!(controller == self.owner, true);
+            assert_eq!(self.is_allowed_provider(controller), true);
             let index_opt = self.services_map_by_uuid.get(&uuid);
             if let Some(&index) = index_opt {
                 self.services_map.insert(index, Service {
@@ -226,6 +249,11 @@ mod services_market {
                 pages += 1;
             }
             (start, end, pages)
+        }
+
+        fn is_allowed_provider(&self, provider_id: AccountId) -> bool {
+            let opt = self.allowed_provider_id_list.get(&provider_id);
+            opt.is_some()
         }
     }
 
