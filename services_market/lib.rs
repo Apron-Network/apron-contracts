@@ -1,5 +1,16 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+/// SBP M1
+///
+/// Please double check that no logic can be moved into the runtime. Contracts are less efficient, powerful and might open security issues`.
+///
+/// Contract should be built with `--release` to ensure a minimal contract size. It's built in debug mode by default.
+///
+/// You are using a lot of String types in your contract. String's should only be used when absolutely necessary. See the ink! FAQ for more details: (https://paritytech.github.io/ink-docs/faq/#how-do-i-use-string-in-my-contract)
+/// Using String pulls in logic needed for e.g. UTF-8 handling, which you might not need, but it blows up the contract file size. 
+/// Also, for String dynamic allocation is needed, increasing the file size of the contract as well and being expensive in terms of performance.
+/// The contract size is important, since it affects how much it costs to deploy/use the contract on chain and how high the throughput on a parachain can be.
+
 extern crate alloc;
 use ink_lang as ink;
 pub use self::services_market::ServicesMarket;
