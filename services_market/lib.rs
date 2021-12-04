@@ -2,7 +2,7 @@
 
 extern crate alloc;
 use ink_lang as ink;
-pub use self::services_market::ServicesMarket;
+pub use self::services_market::{ServicesMarket, ServicesMarketRef};
 pub use self::services_market::Service;
 
 #[ink::contract]
@@ -14,6 +14,7 @@ mod services_market {
         traits::{
             PackedLayout,
             SpreadLayout,
+            SpreadAllocate,
         },
         collections::{
             HashMap as StorageHashMap,
@@ -48,6 +49,7 @@ mod services_market {
     }
 
     #[ink(storage)]
+    #[derive(SpreadAllocate)]
     pub struct ServicesMarket {
         // Store a contract owner
         owner: AccountId,
@@ -95,7 +97,14 @@ mod services_market {
         pub fn allowed_provider(&mut self, provider_id: AccountId) {
             let controller = self.env().caller();
             assert_eq!(controller == self.owner, true);
-            self.allowed_provider_id_list.insert(controller, true);
+            self.allowed_provider_id_list.insert(provider_id, true);
+        }
+
+        #[ink(message)]
+        pub fn remove_allowed_provider(&mut self, provider_id: AccountId) {
+            let controller = self.env().caller();
+            assert_eq!(controller == self.owner, true);
+            self.allowed_provider_id_list.take(&provider_id);
         }
 
         #[ink(message)]

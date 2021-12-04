@@ -18,10 +18,11 @@ mod services_statistics {
             Vec as StorageVec,
         }
     };
-    use services_market::ServicesMarket;
+    use services_market::{ServicesMarketRef};
     use services_market::Service;
     use page_helper::PageParams;
     use page_helper::PageResult;
+    use ink_env::call::FromAccountId;
 
     // service information
     #[derive(Debug, scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout,)]
@@ -44,7 +45,7 @@ mod services_statistics {
     pub struct ServicesStatistics {
         // Store a contract owner
         owner: AccountId,
-        services: Option<ServicesMarket>,
+        services: Option<ServicesMarketRef>,
         statistics_index: u64,
         // Store services statistics
         services_nonce: StorageHashMap<u64, u64>,
@@ -56,6 +57,7 @@ mod services_statistics {
 
     #[ink(event)]
     pub struct SubmitUsageRecordEvent {
+        #[ink(topic)]
         id: u64,
         service_uuid: String,
         user_key: String,
@@ -66,8 +68,9 @@ mod services_statistics {
     impl ServicesStatistics {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
-        pub fn new(controller: AccountId, services_addr: AccountId) -> Self {
-            let contract_instance: ServicesMarket = ink_env::call::FromAccountId::from_account_id(services_addr);
+        pub fn new(controller: AccountId, market_addr: AccountId) -> Self {
+
+            let contract_instance = ServicesMarketRef::from_account_id(market_addr);
             Self {
                 owner: controller,
                 services: Some(contract_instance),
@@ -78,6 +81,14 @@ mod services_statistics {
                 services_map_by_user_key: Default::default(),
                 services_map_by_provider: Default::default(),
             }
+        }
+
+        /// A message that init a service.
+        #[ink(message)]
+        pub fn query_service_by_uuid(&mut self, service_uuid: String) -> Service {
+            assert_eq!(self.services.is_some(), true);
+            let service = self.services.as_ref().unwrap().query_service_by_uuid(service_uuid.clone());
+            return service;
         }
 
         /// A message that init a service.
@@ -94,8 +105,9 @@ mod services_statistics {
             assert_eq!(service.provider_owner == caller, true);
 
             // check upload nonce for duplication of usage
-            let &mut cur_nonce = self.services_nonce.entry(service.index).or_insert(0);
-            assert_eq!(cur_nonce == nonce, true);
+            // TODO tmp do not check nonce
+            // let &mut cur_nonce = self.services_nonce.entry(service.index).or_insert(0);
+            // assert_eq!(cur_nonce == nonce, true);
             self.services_nonce.insert(service.index, nonce + 1);
             
             assert_eq!(self.statistics_index + 1 > self.statistics_index, true);
@@ -117,7 +129,7 @@ mod services_statistics {
             let provider_ids = self.services_map_by_provider.entry(provider_addr.clone()).or_insert(Vec::new());
             provider_ids.push(self.statistics_index);
 
-            self.env().emit_event(SubmitUsageRecordEvent {
+            ink_lang::codegen::EmitEvent::<ServicesStatistics>::emit_event(self.env(), SubmitUsageRecordEvent {
                 id: self.statistics_index,
                 service_uuid,
                 user_key,
